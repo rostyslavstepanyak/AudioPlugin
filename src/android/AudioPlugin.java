@@ -25,7 +25,7 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import io.fabric.sdk.android.Fabric;
 
-public class TwitterConnect extends CordovaPlugin {
+public class AudioPlugin extends CordovaPlugin {
 
 	private static final String LOG_TAG = "Twitter Connect";
 	private String action;
