@@ -1,7 +1,8 @@
-package com.audio.stream;
+package com.datamart.wfpk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -14,10 +15,13 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 
+import java.io.IOException;
+
 public class AudioPlugin extends CordovaPlugin {
 
-	private static final String LOG_TAG = "Twitter Connect";
+	private static final String LOG_TAG = "Audio Player";
 	private String action;
+	private MediaPlayer mp = null;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
@@ -41,8 +45,20 @@ public class AudioPlugin extends CordovaPlugin {
 		cordova.getThreadPool().execute(new Runnable() {
 			@Override
 			public void run() {
-				callbackContext.success(handleResult());
-				//callbackContext.error("Failed login session");
+				if(mp == null)
+					mp = new MediaPlayer();
+				else
+					mp.stop();
+
+				try {
+					mp.setDataSource("http://europaplus.dp.ua:8000/evropa");
+					mp.prepare();
+					mp.start();
+					callbackContext.success(handleResult());
+				}
+				catch (IOException e) {
+					callbackContext.error(e.getLocalizedMessage());
+				}
 			}
 		});
 	}
