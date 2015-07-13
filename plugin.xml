@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="twitter-connect-plugin" version="0.5.0">
+	<name>Audio Plugin</name>
+	<description>Audio Plugin- Allows handling audio stream</description>
+	<license>Apache 2.0</license>
+	<keywords>cordova,audio, stream</keywords>
+	<repo>https://git-wip-us.apache.org/repos/asf/cordova-plugin-splashscreen.git</repo>
+	<issue>https://issues.apache.org/jira/browse/CB/component/12320653</issue>
+
+	<engines>
+		<engine name="cordova-android" version=">3.9.9" /><!-- Requires Gradle building -->
+<!--		<engine name="cordova-ios" version=">=1.7.1" />-->
+	</engines>
+
+	<js-module src="www/AudioPlugin.js" name="AudioPlugin">
+		<clobbers target="AudioPlugin" />
+	</js-module>
+
+    <!-- android -->
+	<platform name="android">
+		
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="AudioPlugin">
+				<param name="android-package" value="com.datamart.wfpk" />
+			</feature>
+		</config-file>
+		 
+		<framework src="src/android/audio.gradle" custom="true" type="gradleReference" />
+		<source-file src="src/android/AudioPlugin.java" target-dir="src/com/audio/stream" />
+	</platform>
+</plugin>

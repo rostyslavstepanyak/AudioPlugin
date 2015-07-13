@@ -1,0 +1,36 @@
+{
+  "name": "AudioPlugin",
+  "version": "0.4.0",
+  "description": "AudioPlugin - Allows handling audio stream",
+  "cordova": {
+    "id": "AudioPlugin",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rostyslavstepanyak/AudioPlugin"
+  },
+  "keywords": [
+    "cordova",
+    "audio",
+    "stream",
+    "ecosystem:cordova",
+    "cordova-android",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova-android",
+      "version": ">3.9.9"
+    }
+  ],
+  "author": "Ross Stepanyak",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/rostyslavstepanyak/AudioPlugin/issues"
+  },
+  "homepage": "https://github.com/rostyslavstepanyak/AudioPlugin#readme"
+}
