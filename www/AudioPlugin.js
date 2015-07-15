@@ -10,7 +10,7 @@ var AudioPlugin = {
     pause: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'pause', []);
     },
-    stop: function(successCallback, errorCallback, ) {
+    stop: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'stop', []);
     }
 };
