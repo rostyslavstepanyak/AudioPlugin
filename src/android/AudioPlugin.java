@@ -2,6 +2,7 @@ package com.datamart.wfpk;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.util.Log;
 
@@ -28,6 +29,7 @@ public class AudioPlugin extends CordovaPlugin {
 
 	}
 
+	@Override
 	public boolean execute(final String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
 		Log.v(LOG_TAG, "Received: " + action);
 		this.action = action;
@@ -35,34 +37,62 @@ public class AudioPlugin extends CordovaPlugin {
 		final Context context = activity.getApplicationContext();
 		cordova.setActivityResultCallback(this);
 		if (action.equals("play")) {
-			play(activity, callbackContext);
+			String streamUrl = args.getString(0);
+			play(activity, callbackContext, streamUrl);
+			return true;
+		}
+		if (action.equals("pause")) {
+			pause(activity, callbackContext);
+			return true;
+		}
+
+		if (action.equals("changeBitrate")) {
+			changeBitrate(activity, callbackContext);
 			return true;
 		}
 		return false;
 	}
 
-	private void play(final Activity activity, final CallbackContext callbackContext) {
+	private void play(final Activity activity, final CallbackContext callbackContext,final String url) {
 		cordova.getThreadPool().execute(new Runnable() {
 			@Override
 			public void run() {
-				if(mp == null)
+				if (mp == null)
 					mp = new MediaPlayer();
 				else
 					mp.stop();
 
 				try {
-					mp.setDataSource("http://europaplus.dp.ua:8000/evropa");
-					mp.prepare();
+					mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+					mp.setDataSource(url);
+					mp.prepareAsync();
 					mp.start();
 					callbackContext.success(handleResult());
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					callbackContext.error(e.getLocalizedMessage());
 				}
 			}
 		});
 	}
 
+	private void pause(final Activity activity, final CallbackContext callbackContext) {
+		cordova.getThreadPool().execute(new Runnable() {
+			@Override
+			public void run() {
+				mp.pause();
+				callbackContext.success(handleResult());
+			}
+		});
+	}
+
+	private void changeBitrate(final Activity activity, final CallbackContext callbackContext) {
+		cordova.getThreadPool().execute(new Runnable() {
+			@Override
+			public void run() {
+				callbackContext.success(handleResult());
+			}
+		});
+	}
 
 	private JSONObject handleResult() {
 		JSONObject response = new JSONObject();
