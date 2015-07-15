@@ -1,4 +1,4 @@
-cordova.define("com-datamart-wfpk.AudioPlugin", function(require, exports, module) { var exec = require('cordova/exec');
+var exec = require('cordova/exec');
 
 var AudioPlugin = {
     create: function (successCallback, errorCallback, url) {
@@ -17,4 +17,3 @@ var AudioPlugin = {
 
 module.exports = AudioPlugin;
 
-});
