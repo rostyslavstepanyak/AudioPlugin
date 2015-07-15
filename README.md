@@ -32,12 +32,8 @@ playerFailure: function(e) {
 ````
 
 To pause the stream call ````AudioPlugin.pause(sucess,failure);````
+
 To stop the stream call ````AudioPlugin.stop(sucess, failure);````
 
-
-Of course, replace the values with the keys you got from the above steps.
-
-##### Finished!
-You should now be able to: `cordova run android`
 
 
