@@ -4,7 +4,7 @@ var AudioPlugin = {
     create: function (successCallback, errorCallback, url) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'create', [url]);
     },
-    play: function (successCallback, errorCallback, url) {
+    play: function (successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'play', []);
     },
     pause: function(successCallback, errorCallback) {
