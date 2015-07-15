@@ -36,9 +36,13 @@ public class AudioPlugin extends CordovaPlugin {
 		final Activity activity = this.cordova.getActivity();
 		final Context context = activity.getApplicationContext();
 		cordova.setActivityResultCallback(this);
-		if (action.equals("play")) {
+		if(action.equals("create")) {
 			String streamUrl = args.getString(0);
-			play(activity, callbackContext, streamUrl);
+			create(activity, callbackContext, streamUrl);
+			return true;
+		}
+		if (action.equals("play")) {
+			play(activity, callbackContext);
 			return true;
 		}
 		if (action.equals("pause")) {
@@ -46,31 +50,45 @@ public class AudioPlugin extends CordovaPlugin {
 			return true;
 		}
 
-		if (action.equals("changeBitrate")) {
-			changeBitrate(activity, callbackContext);
+		if (action.equals("stop")) {
+			stop(activity, callbackContext);
 			return true;
 		}
 		return false;
 	}
 
-	private void play(final Activity activity, final CallbackContext callbackContext,final String url) {
+	private void create(final Activity activity, final CallbackContext callbackContext, final String url) {
 		cordova.getThreadPool().execute(new Runnable() {
 			@Override
 			public void run() {
-				if (mp == null)
-					mp = new MediaPlayer();
-				else
+				//Just in case
+				if(mp != null && mp.isPlaying()) {
 					mp.stop();
-
+					mp = null;
+				}
+				if (mp == null) {
+					mp = new MediaPlayer();
+				}
 				try {
-					mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
 					mp.setDataSource(url);
-					mp.prepareAsync();
-					mp.start();
-					callbackContext.success(handleResult());
-				} catch (IOException e) {
+					mp.prepare();
+				}
+				catch (IOException e) {
 					callbackContext.error(e.getLocalizedMessage());
 				}
+			}
+		});
+	}
+
+	private void play(final Activity activity, final CallbackContext callbackContext) {
+		cordova.getThreadPool().execute(new Runnable() {
+			@Override
+			public void run() {
+				 if(mp != null) {
+					 if(!mp.isPlaying()) {
+						 mp.start();
+					 }
+				 }
 			}
 		});
 	}
@@ -85,10 +103,14 @@ public class AudioPlugin extends CordovaPlugin {
 		});
 	}
 
-	private void changeBitrate(final Activity activity, final CallbackContext callbackContext) {
+	private void stop(final Activity activity, final CallbackContext callbackContext) {
 		cordova.getThreadPool().execute(new Runnable() {
 			@Override
 			public void run() {
+				if(mp != null) {
+					mp.stop();
+					mp = null;
+				}
 				callbackContext.success(handleResult());
 			}
 		});
