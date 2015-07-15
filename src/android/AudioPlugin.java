@@ -72,6 +72,7 @@ public class AudioPlugin extends CordovaPlugin {
 				try {
 					mp.setDataSource(url);
 					mp.prepare();
+                    callbackContext.success(handleResult());
 				}
 				catch (IOException e) {
 					callbackContext.error(e.getLocalizedMessage());
@@ -89,6 +90,7 @@ public class AudioPlugin extends CordovaPlugin {
 						 mp.start();
 					 }
 				 }
+                 callbackContext.success(handleResult());
 			}
 		});
 	}
