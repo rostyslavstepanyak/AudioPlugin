@@ -2,7 +2,7 @@ var exec = require('cordova/exec');
 
 var AudioPlugin = {
     create: function (successCallback, errorCallback, url) {
-        exec(successCallback, errorCallback, 'AudioPlugin', 'play', [url]);
+        exec(successCallback, errorCallback, 'AudioPlugin', 'create', [url]);
     },
     play: function (successCallback, errorCallback, url) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'play', []);
