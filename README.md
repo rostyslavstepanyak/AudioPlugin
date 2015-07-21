@@ -37,7 +37,8 @@ To stop the stream call ````AudioPlugin.stop(sucess, failure);````
 
 To check if the player is playing call  
 
-````AudioPlugin.isPlaying(function(result) {
+````
+AudioPlugin.isPlaying(function(result) {
                              if(result.isPlaying) {
                                 alaert('Got the sound!');
                              }
@@ -45,7 +46,9 @@ To check if the player is playing call
                                 alert('Either not created or paused/stopped');
                              }
                           }, 
-                          function(e) {alert(e);});````
+                          function(e) {alert(e);});
+
+````
 
 
 
