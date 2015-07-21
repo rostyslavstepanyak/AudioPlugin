@@ -35,7 +35,7 @@ To pause the stream call ````AudioPlugin.pause(sucess,failure);````
 
 To stop the stream call ````AudioPlugin.stop(sucess, failure);````
 
-To check if the player is playing call  
+To check if the player is playing:
 
 ````
 AudioPlugin.isPlaying(function(result) {
