@@ -40,7 +40,7 @@ To check if the player is playing call
 ````
 AudioPlugin.isPlaying(function(result) {
                          if(result.isPlaying) {
-                             alaert('Got the sound!');
+                             alert('Got the sound!');
                          }
                          else {
                              alert('Either not created or paused/stopped');
