@@ -54,6 +54,11 @@ public class AudioPlugin extends CordovaPlugin {
 			stop(activity, callbackContext);
 			return true;
 		}
+        
+        if (action.equals("isPlaying")) {
+            isPlaying(activity, callbackContext);
+            return true;
+        }
 		return false;
 	}
 
@@ -104,6 +109,15 @@ public class AudioPlugin extends CordovaPlugin {
 			}
 		});
 	}
+    
+    private void isPlaying(final Activity activity, final CallbackContext callbackContext) {
+        cordova.getThreadPool().execute(new Runnable() {
+            @Override
+            public void run() {
+                callbackContext.success(isPlayingInJSON());
+            }
+        });
+    }
 
 	private void stop(final Activity activity, final CallbackContext callbackContext) {
 		cordova.getThreadPool().execute(new Runnable() {
@@ -117,6 +131,22 @@ public class AudioPlugin extends CordovaPlugin {
 			}
 		});
 	}
+    
+    private JSONObject isPlayingInJSON() {
+        JSONObject response = new JSONObject();
+        try {
+            if(mp != null) {
+                response.put("isPlaying", mp.isPlaying());
+            }
+            else {
+                response.put("isPlaying", false);
+            }
+            
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return response;
+    }
 
 	private JSONObject handleResult() {
 		JSONObject response = new JSONObject();

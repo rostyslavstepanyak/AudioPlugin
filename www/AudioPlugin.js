@@ -12,6 +12,9 @@ var AudioPlugin = {
     },
     stop: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'stop', []);
+    },
+    isPlaying: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'AudioPlugin', 'isPlaying', []);
     }
 };
 
