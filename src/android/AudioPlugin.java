@@ -75,6 +75,7 @@ public class AudioPlugin extends CordovaPlugin {
 					mp = new MediaPlayer();
 				}
 				try {
+					mp.reset();
 					mp.setDataSource(url);
 					mp.prepare();
                     callbackContext.success(handleResult());
