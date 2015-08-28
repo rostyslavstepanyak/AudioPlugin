@@ -50,5 +50,35 @@ AudioPlugin.isPlaying(function(result) {
 
 ````
 
+To get the volume:
+
+````
+AudioPlugin.getVolume(function(result) {
+                        if(result.volume) {
+                            alert('The volume: ' + result.volume);
+                        }
+                        else {
+                            alert('Someting weird. We should have received the volume');
+                        }
+                    }, 
+                    function(e) {alert(e);});
+
+````
+
+
+To set the volume:
+
+````
+AudioPlugin.setVolume(function(result) {
+                        if(result) {
+                            alert('The volume is set');
+                        }
+                     }, 
+                     function(e) {alert(e);}, 0.7);
+
+````
+
+
+
 
 
