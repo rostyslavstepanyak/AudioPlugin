@@ -220,7 +220,7 @@ public class AudioPlugin extends CordovaPlugin {
         JSONObject response = new JSONObject();
         try {
             AudioManager audioManager = (AudioManager)  activity.getSystemService(Context.AUDIO_SERVICE);
-            int origionalVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int origionalVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             int volume_level= audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             response.put("volume", volume_level*1.0 / origionalVolume*1.0);
         }
