@@ -147,11 +147,12 @@ public class AudioPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                if(mp != null) {
+                if(mp == null) {
                     callbackContext.error("Player not initialised");
                 }
-                
-                callbackContext.success(handleSetVolumeResult(activity, volume));
+                else {
+                    callbackContext.success(handleSetVolumeResult(activity, volume));
+                }
             }
         });
     }
@@ -160,10 +161,12 @@ public class AudioPlugin extends CordovaPlugin {
         cordova.getThreadPool().execute(new Runnable() {
             @Override
             public void run() {
-                if(mp != null) {
+                if(mp == null) {
                     callbackContext.error("Player not initialised");
                 }
-                callbackContext.success(handleVolumeResult(activity));
+                else {
+                    callbackContext.success(handleVolumeResult(activity));
+                }
             }
         });
     }
