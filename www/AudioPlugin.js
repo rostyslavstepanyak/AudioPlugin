@@ -15,7 +15,14 @@ var AudioPlugin = {
     },
     isPlaying: function(successCallback, errorCallback) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'isPlaying', []);
+    },
+    getVolume: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'AudioPlugin', 'getVolume', []);
+    },
+    setVolume: function(successCallback, errorCallback, volume) {
+        exec(successCallback, errorCallback, 'AudioPlugin', 'setVolume', [volume]);
     }
+    
 };
 
 module.exports = AudioPlugin;
