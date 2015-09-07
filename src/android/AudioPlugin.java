@@ -13,6 +13,7 @@ import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -203,7 +204,9 @@ public class AudioPlugin extends CordovaPlugin {
         mSettingsContentObserver = new SettingsContentObserver(activity.getApplicationContext(), new Handler(), new VolumeChangeCallback() {
             @Override
             public void volumeChanged(double newVolume) {
-                volumeChangesCallback.success(handleVolumeResult(activity));
+                PluginResult dataResult = new PluginResult(PluginResult.Status.OK, handleVolumeResult(activity));
+                dataResult.setKeepCallback(true);
+                volumeChangesCallback.sendPluginResult(dataResult);
             }
         });
         activity.getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver);
