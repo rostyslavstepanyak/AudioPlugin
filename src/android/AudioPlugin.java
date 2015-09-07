@@ -115,6 +115,7 @@ public class AudioPlugin extends CordovaPlugin {
                 if(mp != null) {
                     if(!mp.isPlaying()) {
                         mp.start();
+                        setContentObserverPlayingState(true);
                     }
                 }
                 callbackContext.success(handleResult());
@@ -127,6 +128,7 @@ public class AudioPlugin extends CordovaPlugin {
             @Override
             public void run() {
                 mp.pause();
+                setContentObserverPlayingState(false);
                 callbackContext.success(handleResult());
             }
         });
@@ -148,6 +150,8 @@ public class AudioPlugin extends CordovaPlugin {
                 if(mp != null) {
                     mp.stop();
                     mp = null;
+
+                    setContentObserverPlayingState(false);
                 }
                 callbackContext.success(handleResult());
             }
@@ -203,16 +207,18 @@ public class AudioPlugin extends CordovaPlugin {
 
         mSettingsContentObserver = new SettingsContentObserver(activity.getApplicationContext(), new Handler(), new VolumeChangeCallback() {
             @Override
-            public void volumeChanged(double newVolume) {
+            public void volumeChanged(float newVolume) {
                 PluginResult dataResult = new PluginResult(PluginResult.Status.OK, handleVolumeResult(activity));
                 dataResult.setKeepCallback(true);
                 volumeChangesCallback.sendPluginResult(dataResult);
             }
-        });
+        }, isPlayerPlaying());
         activity.getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver);
 
         //send initially the first callback as the confirmation that you subscribed for volume changes */
-        volumeChangesCallback.success(handleVolumeResult(activity));
+        PluginResult dataResult = new PluginResult(PluginResult.Status.OK, handleVolumeResult(activity));
+        dataResult.setKeepCallback(true);
+        volumeChangesCallback.sendPluginResult(dataResult);
     }
 
     private JSONObject handleResult() {
@@ -229,9 +235,9 @@ public class AudioPlugin extends CordovaPlugin {
         JSONObject response = new JSONObject();
         try {
             AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-            int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+            int maxVolume = audioManager.getStreamMaxVolume(streamType());
             int newVolume = (int) (maxVolume*volume);
-            audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);
+            audioManager.setStreamVolume(streamType(), newVolume, 0);
             response.put("status", "OK");
         }
         catch (JSONException e) {
@@ -247,8 +253,8 @@ public class AudioPlugin extends CordovaPlugin {
         JSONObject response = new JSONObject();
         try {
             AudioManager audioManager = (AudioManager)  activity.getSystemService(Context.AUDIO_SERVICE);
-            int origionalVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-            int volume_level= audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+            int origionalVolume = audioManager.getStreamMaxVolume(streamType());
+            int volume_level= audioManager.getStreamVolume(streamType());
             response.put("volume", volume_level*1.0 / origionalVolume*1.0);
         }
         catch (JSONException e) {
@@ -259,5 +265,29 @@ public class AudioPlugin extends CordovaPlugin {
         }
         
         return response;
+    }
+
+    Boolean isPlayerPlaying() {
+        if(mp != null) {
+            return mp.isPlaying();
+        }
+        else {
+            return false;
+        }
+    }
+
+    int streamType() {
+        if(isPlayerPlaying()) {
+            return AudioManager.STREAM_MUSIC;
+        }
+        else {
+            return AudioManager.STREAM_SYSTEM;
+        }
+    }
+
+    private void setContentObserverPlayingState(Boolean isPlaying) {
+        if(mSettingsContentObserver != null) {
+            mSettingsContentObserver.setIsPlaying(isPlaying);
+        }
     }
 }

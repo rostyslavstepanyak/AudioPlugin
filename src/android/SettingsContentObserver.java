@@ -13,15 +13,17 @@ public class SettingsContentObserver extends ContentObserver {
     int maxVolume;
     Context context;
     VolumeChangeCallback callback;
+    private Boolean isPlaying = false;
 
-    public SettingsContentObserver(Context context, Handler handler, VolumeChangeCallback callback) {
+    public SettingsContentObserver(Context context, Handler handler, VolumeChangeCallback callback, Boolean isPlaying) {
         super(handler);
         this.context = context;
         this.callback = callback;
+        this.isPlaying = isPlaying;
 
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        previousVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVolume = audio.getStreamMaxVolume(streamType());
+        previousVolume = audio.getStreamVolume(streamType());
     }
 
     @Override
@@ -34,18 +36,30 @@ public class SettingsContentObserver extends ContentObserver {
         super.onChange(selfChange);
 
         AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-        int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-
-        /*int delta=previousVolume-currentVolume;
-
-        if(delta>0)
-        {
-            previousVolume=currentVolume;
-        }
-        else if(delta<0)
-        {
-            previousVolume=currentVolume;
-        }*/
-        callback.volumeChanged(currentVolume*1.0 / maxVolume*1.0);
+        int currentVolume = audio.getStreamVolume(streamType());
+        callback.volumeChanged((float)(currentVolume*1.0 / maxVolume*1.0));
     }
+
+    public Boolean getIsPlaying() {
+        return isPlaying;
+    }
+
+    public void setIsPlaying(Boolean isPlaying) {
+        this.isPlaying = isPlaying;
+
+        /*In case the playback state is changed, we should get the max volume of the stream again*/
+        AudioManager audio = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        maxVolume = audio.getStreamMaxVolume(streamType());
+    }
+
+    /*depending on the playback state, use either STREAM_MUSIC (when the player is playing) or STREAM_SYSTEM*/
+    int streamType() {
+        if(isPlaying) {
+            return AudioManager.STREAM_MUSIC;
+        }
+        else {
+            return AudioManager.STREAM_SYSTEM;
+        }
+    }
+
 }
