@@ -1,9 +1,12 @@
 package com.datamart.wfpk;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.Build;
+import android.os.Handler;
 import android.util.Log;
 
 import org.apache.cordova.CallbackContext;
@@ -23,6 +26,8 @@ public class AudioPlugin extends CordovaPlugin {
     private static final String LOG_TAG = "Audio Player";
     private String action;
     private MediaPlayer mp = null;
+    private CallbackContext volumeChangesCallback;
+    private SettingsContentObserver mSettingsContentObserver;
     
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
@@ -67,7 +72,12 @@ public class AudioPlugin extends CordovaPlugin {
         
         if (action.equals("setVolume")) {
             double volume = args.getDouble(0);
-            setVolume(activity, callbackContext, (float)volume);
+            setVolume(activity, callbackContext, (float) volume);
+            return true;
+        }
+
+        if (action.equals("subscribe")) {
+            subscribe(activity, callbackContext);
             return true;
         }
         return false;
@@ -186,7 +196,22 @@ public class AudioPlugin extends CordovaPlugin {
         }
         return response;
     }
-    
+
+    private void subscribe(final Activity activity, final CallbackContext callbackContext) {
+        volumeChangesCallback = callbackContext;
+
+        mSettingsContentObserver = new SettingsContentObserver(activity.getApplicationContext(), new Handler(), new VolumeChangeCallback() {
+            @Override
+            public void volumeChanged(double newVolume) {
+                volumeChangesCallback.success(handleVolumeResult(activity));
+            }
+        });
+        activity.getApplicationContext().getContentResolver().registerContentObserver(android.provider.Settings.System.CONTENT_URI, true, mSettingsContentObserver);
+
+        //send initially the first callback as the confirmation that you subscribed for volume changes */
+        volumeChangesCallback.success(handleVolumeResult(activity));
+    }
+
     private JSONObject handleResult() {
         JSONObject response = new JSONObject();
         try {
@@ -201,7 +226,6 @@ public class AudioPlugin extends CordovaPlugin {
         JSONObject response = new JSONObject();
         try {
             AudioManager audioManager = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
-            int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
             int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
             int newVolume = (int) (maxVolume*volume);
             audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, newVolume, 0);

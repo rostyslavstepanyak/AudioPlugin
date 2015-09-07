@@ -27,5 +27,8 @@
 		 
 		<framework src="src/android/audio.gradle" custom="true" type="gradleReference" />
 		<source-file src="src/android/AudioPlugin.java" target-dir="src/com/datamart/wfpk" />
+        <source-file src="src/android/VolumeChangeCallback.java" target-dir="src/com/datamart/wfpk" />
+        <source-file src="src/android/SettingsContentObserver.java" target-dir="src/com/datamart/wfpk" />
+
 	</platform>
 </plugin>

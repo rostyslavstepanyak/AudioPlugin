@@ -21,6 +21,9 @@ var AudioPlugin = {
     },
     setVolume: function(successCallback, errorCallback, volume) {
         exec(successCallback, errorCallback, 'AudioPlugin', 'setVolume', [volume]);
+    },
+    subscribe: function(successCallback, errorCallback) {
+        exec(successCallback, errorCallback, 'AudioPlugin', 'subscribe', []);
     }
     
 };
