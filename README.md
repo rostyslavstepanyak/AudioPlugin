@@ -78,6 +78,17 @@ AudioPlugin.setVolume(function(result) {
 
 ````
 
+To start tracking the volume, for example hardware keys "music_up"/"music_down". (Please note that in case the playback of the stream not started yet it will respond with the system volume level not with the music volume level)
+
+AudioPlugin.subscribe(function(result) {
+                            if(result) {
+                                alert('Current volume is: ' + result.volume);
+                            }
+                      }, 
+                      function(e) {alert('Normally this should never happen');});
+
+
+
 
 
 

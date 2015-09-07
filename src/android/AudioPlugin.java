@@ -89,7 +89,7 @@ public class AudioPlugin extends CordovaPlugin {
             @Override
             public void run() {
                 //Just in case
-                if(mp != null && mp.isPlaying()) {
+                if(mp != null) {
                     mp.stop();
                     mp = null;
                 }
